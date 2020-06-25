@@ -1,7 +1,7 @@
 const compose = (...functions) => data =>
   functions.reduceRight((value, func) => func(value), data)
 
-const attrsToString = (obj = {}) => {
+/* const attrsToString = (obj = {}) => {
   const keys = Object.keys(obj)
   const attrs = []
 
@@ -10,20 +10,24 @@ const attrsToString = (obj = {}) => {
     attrs.push(`${attr}="${obj[attr]}"`)
   }
 
-  const string = attrs.join('')
+  const string = attrs.join(' ')
 
   return string
-}
+} */
+
+const attrsToString = (obj = {}) => Object.keys(obj).map(attr => `${attr}="${obj[attr]}"`).join(' ')
 
 const tagAtrrs = obj => (content = "") => `<${obj.tag}${obj.attrs ? ' ' : ''}${attrsToString(obj.attrs)}>${content}</${obj.tag}>`
 
-const tag = t => {
+/* const tag = t => {
   if (typeof t === 'string') {
     tagAtrrs({tag: t})
   } else {
     tagAtrrs(t)
   }
-}
+} */
+
+const tag = t => typeof t === 'string' ? tagAtrrs({tag: t}) : tagAtrrs(t)
 
 const tableRowTag = tag('tr')
 //const tableRow = items => tableRowTag(tableCells(items))
@@ -31,6 +35,8 @@ const tableRow = items => compose(tableRowTag, tableCells)(items)
 
 const tableCell = tag('td')
 const tableCells = items => items.map(tableCell).join('')
+
+const trashIcon = tag({tag: 'i', attrs: {class: 'fas fa-trash-alt'}})('')
 
 let description = $('#description')
 let calories = $('#calories')
@@ -80,7 +86,7 @@ const add = () => {
   list.push(newItem);
   cleanInputs()
   updateTotals()
-  console.log(list);
+  renderItems()
 }
 
 const updateTotals = () => {
@@ -102,4 +108,28 @@ const cleanInputs = () => {
   calories.val('')
   carbs.val('')
   protein.val('')
+}
+
+const renderItems = () => {
+  $('tbody').empty()
+
+  list.map((item, index ) => {
+
+    const removeButton = tag({
+      tag: 'button',
+      attrs: {
+        class: 'btn btn-outline-danger',
+        onclick: `removeItem(${index})`
+      }
+    })(trashIcon)
+
+    $('tbody').append(tableRow([item.description, item.calories, item.carbs, item.protein, removeButton]))
+  })
+}
+
+const removeItem = (index) => {
+  list.splice(index, 1)
+
+  updateTotals()
+  renderItems()
 }
