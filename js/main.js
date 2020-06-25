@@ -6,32 +6,7 @@ let calories = $('#calories')
 let carbs = $('#carbs')
 let protein = $('#protein')
 
-let list = [
-  {
-  description: 'Manzana',
-  calories: 10,
-  carbs: 10,
-  protein: 10
-  },
-  {
-    description: 'Durazno',
-    calories: 10,
-    carbs: 10,
-    protein: 10
-  },
-  {
-    description: 'Fresa',
-    calories: 10,
-    carbs: 10,
-    protein: 10
-  },
-  {
-    description: 'Uva',
-    calories: 10,
-    carbs: 10,
-    protein: 10
-  }
-]
+let list = []
 
 description.keypress(() => {
   description.removeClass('is-invalid')
@@ -61,5 +36,24 @@ const validateInputs = () => {
     calories.val() &&
     carbs.val() &&
     protein.val()
-  ) console.log('Agregar item a lista')
+  ) add()
+}
+
+const add = () => {
+  const newItem = {
+    description: description.val(),
+    calories: parseInt(calories.val()),
+    carbs: parseInt(carbs.val()),
+    protein: parseInt(protein.val())
+  }
+  list.push(newItem);
+  cleanInputs()
+  console.log(list);
+}
+
+const cleanInputs = () => {
+  description.val('')
+  calories.val('')
+  carbs.val('')
+  protein.val('')
 }
