@@ -39,6 +39,7 @@ const tableCells = items => items.map(tableCell).join('')
 const trashIcon = tag({tag: 'i', attrs: {class: 'fas fa-trash-alt'}})('')
 
 let description = $('#description')
+let quantity = $('#quantity')
 let calories = $('#calories')
 let carbs = $('#carbs')
 let protein = $('#protein')
@@ -47,6 +48,10 @@ let list = []
 
 description.keypress(() => {
   description.removeClass('is-invalid')
+})
+
+quantity.keypress(() => {
+  quantity.removeClass('is-invalid')
 })
 
 calories.keypress(() => {
@@ -64,12 +69,14 @@ protein.keypress(() => {
 const validateInputs = () => {
 
   description.val() ? '' : description.addClass('is-invalid')
+  quantity.val() ? '' : quantity.addClass('is-invalid')
   calories.val() ? '' : calories.addClass('is-invalid')
   carbs.val() ? '' : carbs.addClass('is-invalid')
   protein.val() ? '' : protein.addClass('is-invalid')
 
   if(
     description.val() &&
+    quantity.val() &&
     calories.val() &&
     carbs.val() &&
     protein.val()
@@ -79,9 +86,9 @@ const validateInputs = () => {
 const add = () => {
   const newItem = {
     description: description.val(),
-    calories: parseInt(calories.val()),
-    carbs: parseInt(carbs.val()),
-    protein: parseInt(protein.val())
+    calories: parseInt(calories.val()) * parseInt(quantity.val()),
+    carbs: parseInt(carbs.val()) * parseInt(quantity.val()),
+    protein: parseInt(protein.val()) * parseInt(quantity.val())
   }
   list.push(newItem);
   cleanInputs()
@@ -105,6 +112,7 @@ const updateTotals = () => {
 
 const cleanInputs = () => {
   description.val('')
+  quantity.val('')
   calories.val('')
   carbs.val('')
   protein.val('')
