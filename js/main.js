@@ -15,7 +15,15 @@ const attrsToString = (obj = {}) => {
   return string
 }
 
-const tag = t => content => `<${t}>${content}</${t}>`
+const tagAtrrs = obj => (content = "") => `<${obj.tag}${obj.attrs ? ' ' : ''}${attrsToString(obj.attrs)}>${content}</${obj.tag}>`
+
+const tag = t => {
+  if (typeof t === 'string') {
+    tagAtrrs({tag: t})
+  } else {
+    tagAtrrs(t)
+  }
+}
 
 let description = $('#description')
 let calories = $('#calories')
